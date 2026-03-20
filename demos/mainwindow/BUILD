@@ -1,23 +1,9 @@
-load("@rules_qt//:qt.bzl", "qt_cc_binary", "qt_cc_library")
-
-qt_cc_library(
-    name = "main_window",
-    srcs = [
-        "main_window.cpp",
-    ],
-    hdrs = ["main_window.h"],
-    deps = [
-        "@rules_qt//:qt_core",
-        "@rules_qt//:qt_gui",
-        "@rules_qt//:qt_widgets",
-    ],
-)
+load("@rules_qt//:qt.bzl", "qt_cc_binary")
 
 qt_cc_binary(
-    name = "mainwindow",
+    name = "tickets",
     srcs = ["main.cpp"],
     deps = [
-        ":main_window",
         "@rules_qt//:qt_core",
         "@rules_qt//:qt_widgets",
     ],
