@@ -337,53 +337,71 @@ private:
         root->setSpacing(12);
 
         // --- Левая панель меню ---
-        auto *leftBox = new QGroupBox("Меню");
+        auto *leftBox = new QGroupBox("📚 Меню");
+        leftBox->setObjectName("leftBox");
         auto *leftLay = new QVBoxLayout(leftBox);
+        leftLay->setSpacing(10);
 
         translationBtn = new QPushButton("📖 Translation");
+        translationBtn->setObjectName("translationBtn");
         grammarBtn     = new QPushButton("📝 Grammar");
-        translationBtn->setMinimumHeight(42);
-        grammarBtn->setMinimumHeight(42);
+        grammarBtn->setObjectName("grammarBtn");
+        translationBtn->setMinimumHeight(48);
+        grammarBtn->setMinimumHeight(48);
+        translationBtn->setCursor(Qt::PointingHandCursor);
+        grammarBtn->setCursor(Qt::PointingHandCursor);
 
         leftLay->addWidget(translationBtn);
         leftLay->addWidget(grammarBtn);
         leftLay->addSpacing(8);
 
         auto *settingsLabel = new QLabel();
+        settingsLabel->setObjectName("difficultyLabel");
         settingsLabel->setWordWrap(true);
+        settingsLabel->setTextFormat(Qt::RichText);
         difficultyLabel = settingsLabel;
         leftLay->addWidget(settingsLabel);
 
         leftLay->addStretch();
 
-        auto *scoreBox = new QGroupBox("Ваш прогресс");
+        auto *scoreBox = new QGroupBox("⭐ Ваш прогресс");
+        scoreBox->setObjectName("scoreBox");
         auto *scoreLay = new QVBoxLayout(scoreBox);
         scoreLabel = new QLabel("Баллы: 0");
-        QFont f = scoreLabel->font(); f.setBold(true); f.setPointSize(f.pointSize() + 2);
+        scoreLabel->setObjectName("scoreLabel");
+        QFont f = scoreLabel->font(); f.setBold(true); f.setPointSize(f.pointSize() + 4);
         scoreLabel->setFont(f);
+        scoreLabel->setAlignment(Qt::AlignCenter);
         scoreLay->addWidget(scoreLabel);
         leftLay->addWidget(scoreBox);
 
         root->addWidget(leftBox, 0);
-        leftBox->setMinimumWidth(240);
+        leftBox->setMinimumWidth(260);
 
         // --- Правая часть: верхняя инфо-строка + stacked ---
         auto *rightWrap = new QVBoxLayout;
         root->addLayout(rightWrap, 1);
 
         auto *topLay = new QHBoxLayout;
+        topLay->setSpacing(10);
         progressBar = new QProgressBar;
+        progressBar->setObjectName("progressBar");
         progressBar->setFormat("Задание %v / %m");
         progressBar->setRange(0, 1);
         progressBar->setValue(0);
+        progressBar->setMinimumHeight(28);
         timerLabel = new QLabel("⏱ --:--");
+        timerLabel->setObjectName("timerLabel");
         timerLabel->setAlignment(Qt::AlignCenter);
-        timerLabel->setMinimumWidth(80);
-        QFont tf = timerLabel->font(); tf.setBold(true);
+        timerLabel->setMinimumWidth(110);
+        QFont tf = timerLabel->font(); tf.setBold(true); tf.setPointSize(tf.pointSize() + 1);
         timerLabel->setFont(tf);
-        livesLabel = new QLabel("❤❤❤");
+        livesLabel = new QLabel("❤ ❤ ❤");
+        livesLabel->setObjectName("livesLabel");
         livesLabel->setAlignment(Qt::AlignCenter);
-        livesLabel->setMinimumWidth(70);
+        livesLabel->setMinimumWidth(110);
+        QFont lf = livesLabel->font(); lf.setPointSize(lf.pointSize() + 2);
+        livesLabel->setFont(lf);
 
         topLay->addWidget(progressBar, 1);
         topLay->addWidget(livesLabel);
@@ -413,21 +431,36 @@ private:
 
     QWidget *buildWelcomePage() {
         auto *w = new QWidget;
+        w->setObjectName("welcomePage");
         auto *lay = new QVBoxLayout(w);
         lay->addStretch();
+
+        auto *emoji = new QLabel("🦜");
+        emoji->setAlignment(Qt::AlignCenter);
+        QFont ef = emoji->font(); ef.setPointSize(64);
+        emoji->setFont(ef);
+        lay->addWidget(emoji);
+
         auto *title = new QLabel("Добро пожаловать в LinguaDuo!");
-        QFont tf = title->font(); tf.setPointSize(tf.pointSize() + 6); tf.setBold(true);
+        title->setObjectName("welcomeTitle");
+        QFont tf = title->font(); tf.setPointSize(tf.pointSize() + 10); tf.setBold(true);
         title->setFont(tf);
         title->setAlignment(Qt::AlignCenter);
         lay->addWidget(title);
 
         auto *desc = new QLabel(
-            "Выберите упражнение слева.\n\n"
-            "• Translation — перевод фраз с английского\n"
-            "• Grammar — выбор правильной формы\n\n"
-            "Подсказка: клавиша H.\n"
-            "Уровень сложности — в меню «Настройки».");
+            "<p style='line-height:160%;'>"
+            "Выберите упражнение в меню слева.<br><br>"
+            "<span style='color:#a6e3a1;'>📖 Translation</span> — перевод фраз с английского<br>"
+            "<span style='color:#cba6f7;'>📝 Grammar</span> — выбор правильной формы<br><br>"
+            "<span style='color:#f9e2af;'>Клавиша H</span> — подсказка к текущему заданию<br>"
+            "Уровень сложности — в меню <b>«Настройки»</b>."
+            "</p>");
+        desc->setObjectName("welcomeDesc");
+        desc->setTextFormat(Qt::RichText);
         desc->setAlignment(Qt::AlignCenter);
+        QFont df = desc->font(); df.setPointSize(df.pointSize() + 1);
+        desc->setFont(df);
         lay->addWidget(desc);
         lay->addStretch();
         return w;
@@ -436,29 +469,40 @@ private:
     QWidget *buildTranslationPage() {
         auto *w = new QWidget;
         auto *lay = new QVBoxLayout(w);
+        lay->setSpacing(10);
 
-        auto *hdr = new QLabel("Переведите на русский:");
+        auto *hdr = new QLabel("📖  Переведите на русский:");
+        hdr->setObjectName("subHeader");
         lay->addWidget(hdr);
 
         trSource = new QLabel;
-        QFont f = trSource->font(); f.setPointSize(f.pointSize() + 4); f.setBold(true);
+        trSource->setObjectName("translationSource");
+        QFont f = trSource->font(); f.setPointSize(f.pointSize() + 6); f.setBold(true);
         trSource->setFont(f);
         trSource->setWordWrap(true);
-        trSource->setStyleSheet("padding: 12px; background: #2a2a2a; border-radius: 6px;");
+        trSource->setAlignment(Qt::AlignCenter);
+        trSource->setMinimumHeight(80);
         lay->addWidget(trSource);
 
         trEdit = new QTextEdit;
+        trEdit->setObjectName("translationEdit");
         trEdit->setPlaceholderText("Введите перевод здесь…");
         lay->addWidget(trEdit, 1);
 
         trFeedback = new QLabel(" ");
+        trFeedback->setObjectName("feedback");
         trFeedback->setWordWrap(true);
+        QFont ff = trFeedback->font(); ff.setPointSize(ff.pointSize() + 1); ff.setBold(true);
+        trFeedback->setFont(ff);
         lay->addWidget(trFeedback);
 
         auto *btnRow = new QHBoxLayout;
         btnRow->addStretch();
-        trSubmit = new QPushButton("Submit");
-        trSubmit->setMinimumHeight(36);
+        trSubmit = new QPushButton("✓ Submit");
+        trSubmit->setObjectName("submitBtn");
+        trSubmit->setCursor(Qt::PointingHandCursor);
+        trSubmit->setMinimumHeight(40);
+        trSubmit->setMinimumWidth(140);
         btnRow->addWidget(trSubmit);
         lay->addLayout(btnRow);
 
@@ -469,22 +513,32 @@ private:
     QWidget *buildGrammarPage() {
         auto *w = new QWidget;
         auto *lay = new QVBoxLayout(w);
+        lay->setSpacing(10);
 
-        auto *hdr = new QLabel("Выберите правильный вариант:");
+        auto *hdr = new QLabel("📝  Выберите правильный вариант:");
+        hdr->setObjectName("subHeader");
         lay->addWidget(hdr);
 
         grQuestion = new QLabel;
-        QFont f = grQuestion->font(); f.setPointSize(f.pointSize() + 4); f.setBold(true);
+        grQuestion->setObjectName("grammarQuestion");
+        QFont f = grQuestion->font(); f.setPointSize(f.pointSize() + 6); f.setBold(true);
         grQuestion->setFont(f);
         grQuestion->setWordWrap(true);
-        grQuestion->setStyleSheet("padding: 12px; background: #2a2a2a; border-radius: 6px;");
+        grQuestion->setAlignment(Qt::AlignCenter);
+        grQuestion->setMinimumHeight(80);
         lay->addWidget(grQuestion);
 
         grGroup = new QButtonGroup(this);
-        auto *optsBox = new QGroupBox("Варианты");
+        auto *optsBox = new QGroupBox("Варианты ответа");
+        optsBox->setObjectName("grammarOptsBox");
         grOptsLayout = new QVBoxLayout(optsBox);
+        grOptsLayout->setSpacing(4);
         for (int i = 0; i < 4; ++i) {
             auto *rb = new QRadioButton;
+            rb->setObjectName("grammarOption");
+            rb->setCursor(Qt::PointingHandCursor);
+            QFont rf = rb->font(); rf.setPointSize(rf.pointSize() + 1);
+            rb->setFont(rf);
             grGroup->addButton(rb, i);
             grOptsLayout->addWidget(rb);
             grOptions.push_back(rb);
@@ -492,13 +546,19 @@ private:
         lay->addWidget(optsBox);
 
         grFeedback = new QLabel(" ");
+        grFeedback->setObjectName("feedback");
         grFeedback->setWordWrap(true);
+        QFont ff = grFeedback->font(); ff.setPointSize(ff.pointSize() + 1); ff.setBold(true);
+        grFeedback->setFont(ff);
         lay->addWidget(grFeedback);
 
         auto *btnRow = new QHBoxLayout;
         btnRow->addStretch();
-        grSubmit = new QPushButton("Submit");
-        grSubmit->setMinimumHeight(36);
+        grSubmit = new QPushButton("✓ Submit");
+        grSubmit->setObjectName("submitBtn");
+        grSubmit->setCursor(Qt::PointingHandCursor);
+        grSubmit->setMinimumHeight(40);
+        grSubmit->setMinimumWidth(140);
         btnRow->addWidget(grSubmit);
         lay->addLayout(btnRow);
 
@@ -511,32 +571,268 @@ private:
     }
 
     void applyDarkTheme() {
+        // Палитра Catppuccin Mocha + ярко-цветные акценты на виджетах.
         qApp->setStyle("Fusion");
         QPalette p;
-        p.setColor(QPalette::Window, QColor(30, 30, 32));
-        p.setColor(QPalette::WindowText, Qt::white);
-        p.setColor(QPalette::Base, QColor(22, 22, 24));
-        p.setColor(QPalette::AlternateBase, QColor(45, 45, 48));
-        p.setColor(QPalette::ToolTipBase, Qt::white);
-        p.setColor(QPalette::ToolTipText, Qt::black);
-        p.setColor(QPalette::Text, Qt::white);
-        p.setColor(QPalette::Button, QColor(45, 45, 48));
-        p.setColor(QPalette::ButtonText, Qt::white);
-        p.setColor(QPalette::Highlight, QColor(0, 120, 215));
-        p.setColor(QPalette::HighlightedText, Qt::white);
+        const QColor mantle    (0x18, 0x18, 0x25);  // окно
+        const QColor base      (0x1e, 0x1e, 0x2e);  // поля ввода
+        const QColor surface0  (0x31, 0x32, 0x44);  // подложка кнопок
+        const QColor surface1  (0x45, 0x47, 0x5a);
+        const QColor text      (0xcd, 0xd6, 0xf4);
+        const QColor subtext   (0xa6, 0xad, 0xc8);
+        const QColor lavender  (0xb4, 0xbe, 0xfe);
+        const QColor mauve     (0xcb, 0xa6, 0xf7);
+
+        p.setColor(QPalette::Window,           mantle);
+        p.setColor(QPalette::WindowText,       text);
+        p.setColor(QPalette::Base,             base);
+        p.setColor(QPalette::AlternateBase,    surface0);
+        p.setColor(QPalette::ToolTipBase,      base);
+        p.setColor(QPalette::ToolTipText,      text);
+        p.setColor(QPalette::Text,             text);
+        p.setColor(QPalette::Button,           surface0);
+        p.setColor(QPalette::ButtonText,       text);
+        p.setColor(QPalette::BrightText,       lavender);
+        p.setColor(QPalette::Link,             lavender);
+        p.setColor(QPalette::Highlight,        mauve);
+        p.setColor(QPalette::HighlightedText,  mantle);
+        p.setColor(QPalette::PlaceholderText,  subtext);
+        p.setColor(QPalette::Disabled, QPalette::Text,        surface1);
+        p.setColor(QPalette::Disabled, QPalette::ButtonText,  surface1);
+        p.setColor(QPalette::Disabled, QPalette::WindowText,  surface1);
         qApp->setPalette(p);
 
-        qApp->setStyleSheet(
-            "QPushButton { padding: 6px 14px; border-radius: 6px; background: #3a3a3f; }"
-            "QPushButton:hover { background: #4a4a50; }"
-            "QPushButton:disabled { color: #888; background: #2a2a2e; }"
-            "QProgressBar { border: 1px solid #555; border-radius: 6px; text-align: center; background: #222; }"
-            "QProgressBar::chunk { background-color: #2e8b57; border-radius: 5px; }"
-            "QGroupBox { border: 1px solid #444; border-radius: 6px; margin-top: 14px; padding-top: 6px; }"
-            "QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 4px; }"
-            "QRadioButton { padding: 4px; }"
-            "QTextEdit { border: 1px solid #444; border-radius: 6px; padding: 6px; }"
-        );
+        qApp->setStyleSheet(R"CSS(
+        /* ───────── Базовые цвета ───────── */
+        QWidget                 { color: #cdd6f4; }
+        QMainWindow             { background: #181825; }
+        QToolTip                { color: #cdd6f4; background: #1e1e2e;
+                                  border: 1px solid #cba6f7; padding: 4px; border-radius: 4px; }
+
+        /* ───────── Меню сверху ───────── */
+        QMenuBar                { background: #11111b; color: #cdd6f4; padding: 2px; }
+        QMenuBar::item          { padding: 6px 12px; background: transparent; border-radius: 4px; }
+        QMenuBar::item:selected { background: #313244; color: #b4befe; }
+        QMenu                   { background: #1e1e2e; color: #cdd6f4;
+                                  border: 1px solid #45475a; padding: 4px; }
+        QMenu::item             { padding: 6px 22px; border-radius: 4px; }
+        QMenu::item:selected    { background: #313244; color: #b4befe; }
+        QMenu::separator        { height: 1px; background: #45475a; margin: 4px 8px; }
+
+        /* ───────── GroupBox ───────── */
+        QGroupBox {
+            border: 1px solid #45475a;
+            border-radius: 10px;
+            margin-top: 18px;
+            padding: 14px 10px 10px 10px;
+            background: #1e1e2e;
+            font-weight: bold;
+            color: #b4befe;
+        }
+        QGroupBox::title {
+            subcontrol-origin: margin;
+            subcontrol-position: top left;
+            left: 12px;
+            padding: 0 8px;
+            background: #181825;
+            color: #b4befe;
+        }
+
+        /* Левая панель: чуть синее, цветной заголовок */
+        QGroupBox#leftBox {
+            background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
+                stop:0 #1e1e2e, stop:1 #181825);
+            border: 1px solid #585b70;
+        }
+
+        /* Score box — золотая рамка */
+        QGroupBox#scoreBox {
+            border: 2px solid #f9e2af;
+            background: qlineargradient(x1:0,y1:0,x2:0,y2:1,
+                stop:0 #2a2533, stop:1 #1e1e2e);
+        }
+        QGroupBox#scoreBox::title { color: #f9e2af; }
+        QLabel#scoreLabel { color: #f9e2af; padding: 4px; }
+
+        /* Difficulty info — лавандовая полоса слева */
+        QLabel#difficultyLabel {
+            color: #cdd6f4;
+            background: #313244;
+            border-left: 4px solid #b4befe;
+            border-radius: 6px;
+            padding: 8px 10px;
+        }
+
+        /* ───────── Кнопки общие ───────── */
+        QPushButton {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            background: #313244;
+            color: #cdd6f4;
+            font-weight: bold;
+        }
+        QPushButton:hover    { background: #45475a; }
+        QPushButton:pressed  { background: #585b70; }
+        QPushButton:disabled { background: #1e1e2e; color: #585b70; }
+
+        /* Translation — изумрудно-бирюзовый градиент */
+        QPushButton#translationBtn {
+            background: qlineargradient(x1:0,y1:0,x2:1,y2:1,
+                stop:0 #94e2d5, stop:1 #a6e3a1);
+            color: #11111b;
+            font-size: 16px;
+        }
+        QPushButton#translationBtn:hover {
+            background: qlineargradient(x1:0,y1:0,x2:1,y2:1,
+                stop:0 #b3ecdf, stop:1 #c4ebbf);
+        }
+        QPushButton#translationBtn:pressed {
+            background: #74c7ec; color: #11111b;
+        }
+
+        /* Grammar — лилово-розовый градиент */
+        QPushButton#grammarBtn {
+            background: qlineargradient(x1:0,y1:0,x2:1,y2:1,
+                stop:0 #cba6f7, stop:1 #f5c2e7);
+            color: #11111b;
+            font-size: 16px;
+        }
+        QPushButton#grammarBtn:hover {
+            background: qlineargradient(x1:0,y1:0,x2:1,y2:1,
+                stop:0 #d8baf9, stop:1 #facfee);
+        }
+        QPushButton#grammarBtn:pressed {
+            background: #f38ba8; color: #11111b;
+        }
+
+        /* Submit — небесно-синий градиент */
+        QPushButton#submitBtn {
+            background: qlineargradient(x1:0,y1:0,x2:1,y2:1,
+                stop:0 #89b4fa, stop:1 #74c7ec);
+            color: #11111b;
+            font-size: 15px;
+        }
+        QPushButton#submitBtn:hover {
+            background: qlineargradient(x1:0,y1:0,x2:1,y2:1,
+                stop:0 #a3c5fb, stop:1 #92d3f0);
+        }
+        QPushButton#submitBtn:pressed { background: #b4befe; }
+
+        /* ───────── Поля ввода ───────── */
+        QTextEdit, QLineEdit {
+            background: #11111b;
+            color: #cdd6f4;
+            selection-background-color: #cba6f7;
+            selection-color: #11111b;
+            border: 2px solid #45475a;
+            border-radius: 8px;
+            padding: 8px;
+        }
+        QTextEdit:focus, QLineEdit:focus { border-color: #89b4fa; }
+
+        /* ───────── Progress bar ───────── */
+        QProgressBar {
+            border: 1px solid #45475a;
+            border-radius: 8px;
+            background: #1e1e2e;
+            text-align: center;
+            color: #cdd6f4;
+            font-weight: bold;
+        }
+        QProgressBar::chunk {
+            border-radius: 7px;
+            background: qlineargradient(x1:0,y1:0,x2:1,y2:0,
+                stop:0 #a6e3a1, stop:0.5 #94e2d5, stop:1 #89dceb);
+        }
+
+        /* ───────── Жизни и таймер ───────── */
+        QLabel#livesLabel {
+            color: #f38ba8;
+            background: #2b1d24;
+            border: 1px solid #f38ba8;
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-weight: bold;
+        }
+        QLabel#timerLabel {
+            color: #fab387;
+            background: #2c2419;
+            border: 1px solid #fab387;
+            border-radius: 8px;
+            padding: 4px 10px;
+        }
+
+        /* ───────── Заголовок задачи ───────── */
+        QLabel#translationSource {
+            background: qlineargradient(x1:0,y1:0,x2:1,y2:1,
+                stop:0 #1e2a2a, stop:1 #163338);
+            border: 2px solid #94e2d5;
+            border-radius: 12px;
+            padding: 18px;
+            color: #cdd6f4;
+        }
+        QLabel#grammarQuestion {
+            background: qlineargradient(x1:0,y1:0,x2:1,y2:1,
+                stop:0 #2a1f3a, stop:1 #2e2440);
+            border: 2px solid #cba6f7;
+            border-radius: 12px;
+            padding: 18px;
+            color: #cdd6f4;
+        }
+        QLabel#subHeader { color: #b4befe; font-weight: bold; padding: 2px 0; }
+
+        /* ───────── Welcome page ───────── */
+        QLabel#welcomeTitle {
+            color: #b4befe;
+            padding: 8px;
+        }
+        QLabel#welcomeDesc { color: #cdd6f4; }
+
+        /* ───────── Радио-кнопки ───────── */
+        QRadioButton#grammarOption {
+            padding: 10px 12px;
+            background: #313244;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: #cdd6f4;
+            spacing: 10px;
+        }
+        QRadioButton#grammarOption:hover {
+            background: #45475a;
+            border-color: #cba6f7;
+        }
+        QRadioButton#grammarOption:checked {
+            background: #2e2440;
+            border-color: #cba6f7;
+            color: #f5c2e7;
+        }
+        QRadioButton::indicator {
+            width: 16px; height: 16px; border-radius: 8px;
+            border: 2px solid #6c7086; background: #1e1e2e;
+        }
+        QRadioButton::indicator:hover    { border-color: #cba6f7; }
+        QRadioButton::indicator:checked {
+            border: 2px solid #cba6f7;
+            background: qradialgradient(cx:0.5, cy:0.5, radius:0.5,
+                fx:0.5, fy:0.5, stop:0 #f5c2e7, stop:0.5 #cba6f7, stop:1 #1e1e2e);
+        }
+
+        /* ───────── Status bar ───────── */
+        QStatusBar { background: #11111b; color: #a6adc8; border-top: 1px solid #313244; }
+
+        /* ───────── Scrollbars (тонкие, в тон) ───────── */
+        QScrollBar:vertical   { background: #1e1e2e; width: 10px; }
+        QScrollBar:horizontal { background: #1e1e2e; height: 10px; }
+        QScrollBar::handle    { background: #45475a; border-radius: 5px; min-height: 20px; min-width: 20px; }
+        QScrollBar::handle:hover { background: #585b70; }
+        QScrollBar::add-line, QScrollBar::sub-line { background: none; border: none; height: 0; width: 0; }
+
+        /* ───────── Диалоги ───────── */
+        QDialog { background: #181825; }
+        QMessageBox { background: #1e1e2e; }
+        QDialogButtonBox QPushButton { min-width: 80px; }
+        )CSS");
     }
 
     // ---- Логика упражнений ----
@@ -645,7 +941,8 @@ private:
         QString user = trEdit->toPlainText();
         if (user.trimmed().isEmpty()) {
             trFeedback->setText("Введите перевод перед отправкой.");
-            trFeedback->setStyleSheet("color: #ffb347;");
+            trFeedback->setStyleSheet("color: #f9e2af; background: #2c2419; "
+                                       "border: 1px solid #f9e2af; border-radius: 6px; padding: 8px;");
             return;
         }
 
@@ -653,20 +950,23 @@ private:
         if (r.exact) {
             playCorrect();
             trFeedback->setText("✅ Верно!");
-            trFeedback->setStyleSheet("color: #7cff7c;");
+            trFeedback->setStyleSheet("color: #a6e3a1; background: #1d2a22; "
+                                       "border: 1px solid #a6e3a1; border-radius: 6px; padding: 8px;");
             advanceTask();
         } else if (r.close) {
             playCorrect();
             trFeedback->setText(QString("✅ Принято (мелкие расхождения, расстояние %1). "
                                         "Эталон: «%2»")
                                     .arg(r.distance).arg(t.acceptedAnswers.first()));
-            trFeedback->setStyleSheet("color: #c6ff9e;");
+            trFeedback->setStyleSheet("color: #94e2d5; background: #1c2929; "
+                                       "border: 1px solid #94e2d5; border-radius: 6px; padding: 8px;");
             advanceTask();
         } else {
             registerWrong();
             trFeedback->setText(QString("❌ Неверно. Попробуйте ещё раз. (жизней осталось: %1)")
                                     .arg(maxWrong - wrongAttempts));
-            trFeedback->setStyleSheet("color: #ff7c7c;");
+            trFeedback->setStyleSheet("color: #f38ba8; background: #2b1d24; "
+                                       "border: 1px solid #f38ba8; border-radius: 6px; padding: 8px;");
             playWrong();
         }
     }
@@ -676,21 +976,24 @@ private:
         int id = grGroup->checkedId();
         if (id < 0) {
             grFeedback->setText("Выберите вариант перед отправкой.");
-            grFeedback->setStyleSheet("color: #ffb347;");
+            grFeedback->setStyleSheet("color: #f9e2af; background: #2c2419; "
+                                       "border: 1px solid #f9e2af; border-radius: 6px; padding: 8px;");
             return;
         }
         const auto &t = grammarTasks[taskIndex];
         if (id == t.correctIndex) {
             playCorrect();
             grFeedback->setText("✅ Верно!");
-            grFeedback->setStyleSheet("color: #7cff7c;");
+            grFeedback->setStyleSheet("color: #a6e3a1; background: #1d2a22; "
+                                       "border: 1px solid #a6e3a1; border-radius: 6px; padding: 8px;");
             advanceTask();
         } else {
             registerWrong();
             grFeedback->setText(QString("❌ Неверно. Правильно: «%1». (жизней осталось: %2)")
                                     .arg(t.options[t.correctIndex])
                                     .arg(maxWrong - wrongAttempts));
-            grFeedback->setStyleSheet("color: #ff7c7c;");
+            grFeedback->setStyleSheet("color: #f38ba8; background: #2b1d24; "
+                                       "border: 1px solid #f38ba8; border-radius: 6px; padding: 8px;");
             playWrong();
         }
     }
@@ -717,10 +1020,10 @@ private:
 
     void updateLives() {
         int left = std::max(0, maxWrong - wrongAttempts);
-        QString hearts;
-        for (int i = 0; i < left; ++i) hearts += "❤";
-        for (int i = left; i < maxWrong; ++i) hearts += "♡";
-        livesLabel->setText(hearts);
+        QStringList parts;
+        for (int i = 0; i < left; ++i) parts << "❤";
+        for (int i = left; i < maxWrong; ++i) parts << "♡";
+        livesLabel->setText(parts.join("  "));
     }
 
     void onTick() {
@@ -757,18 +1060,21 @@ private:
     }
 
     void refreshDifficultyLabel() {
-        QString d;
+        QString d, color;
         switch (difficulty) {
-            case Difficulty::Easy:   d = "Easy";   break;
-            case Difficulty::Medium: d = "Medium"; break;
-            case Difficulty::Hard:   d = "Hard";   break;
+            case Difficulty::Easy:   d = "Easy";   color = "#a6e3a1"; break;
+            case Difficulty::Medium: d = "Medium"; color = "#f9e2af"; break;
+            case Difficulty::Hard:   d = "Hard";   color = "#f38ba8"; break;
         }
         difficultyLabel->setText(QString(
-            "Уровень: <b>%1</b><br>"
-            "Время: %2 сек<br>"
-            "Жизни: 3<br>"
-            "Баллы за задание: %3")
-            .arg(d).arg(totalTimeForCurrent()).arg(pointsForDifficulty()));
+            "<b style='color:#b4befe;'>Уровень:</b> "
+            "<b style='color:%1;'>%2</b><br>"
+            "<span style='color:#fab387;'>⏱ Время:</span> %3 сек<br>"
+            "<span style='color:#f38ba8;'>❤ Жизни:</span> 3<br>"
+            "<span style='color:#f9e2af;'>★ Баллы / задание:</span> %4")
+            .arg(color).arg(d)
+            .arg(totalTimeForCurrent())
+            .arg(pointsForDifficulty()));
     }
 
     void showHelp() {
